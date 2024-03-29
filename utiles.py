@@ -4,7 +4,8 @@ import argparse
 import numpy as np
 from copy import deepcopy
 
-from constant import *
+# from constant import *
+import constant 
 from clients.helper import Teacher
 
 
@@ -77,8 +78,8 @@ def start():
     parser = argparse.ArgumentParser()
     parser.add_argument('--gpuID', type=str, default='0', help="GPU ID")
     parser.add_argument('--seed', type=int, default=1, help='random seed')
-    parser.add_argument('--method', type=str, default=MFCL, help="name of method", choices=[FedAVG, FedProx, MFCL])
-    parser.add_argument('--dataset', type=str, default=CIFAR100, help="name of dataset")
+    parser.add_argument('--method', type=str, default=constant.MFCL, help="name of method", choices=[constant.ORACLE, constant.FedAVG, constant.FedProx, constant.MFCL])
+    parser.add_argument('--dataset', type=str, default=constant.CIFAR100, help="name of dataset")
     parser.add_argument('--num_clients', type=int, default=50, help='#clients')
     parser.add_argument('--epochs', type=int, default=10, help='Local Epoch size')
     parser.add_argument('--lr', type=float, default=0.1, help='Local Learning Rate')

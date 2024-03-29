@@ -3,7 +3,8 @@ import torch.optim as optim
 from copy import deepcopy
 from torch.utils.data import DataLoader, Subset
 
-from constant import *
+# from constant import *
+import constant
 
 
 class AVG:
@@ -17,9 +18,9 @@ class AVG:
         self.dataset_name = dataset_name
 
     def set_dataloader(self, samples):
-        if self.dataset_name in [CIFAR100, tinyImageNet]:
+        if self.dataset_name in [constant.CIFAR100, constant.tinyImageNet]:
             self.train_loader = DataLoader(Subset(self.train_dataset, samples), batch_size=self.batch_size, shuffle=True)
-        if self.dataset_name == SuperImageNet:
+        if self.dataset_name == constant.SuperImageNet:
             self.train_loader = self.train_dataset.get_dl(samples, train=True)
 
     def set_next_t(self):

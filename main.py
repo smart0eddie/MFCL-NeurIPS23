@@ -3,7 +3,8 @@ import numpy as np
 from copy import deepcopy
 
 import models
-from constant import *
+# from constant import *
+import constant
 from clients.MFCL import MFCL
 from models.ResNet import ResNet18
 from models.myNetwork import network
@@ -18,16 +19,16 @@ os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID'
 os.environ['CUDA_VISIBLE_DEVICES'] = args.gpuID
 setup_seed(args.seed)
 
-if args.dataset == CIFAR100:
+if args.dataset == constant.CIFAR100:
     dataset = CL_dataset(args)
     feature_extractor = ResNet18(args.num_classes, cifar=True)
     ds = dataset.train_dataset
-elif args.dataset == tinyImageNet:
+elif args.dataset == constant.tinyImageNet:
     dataset = CL_dataset(args)
     feature_extractor = ResNet18(args.num_classes, cifar=False)
     ds = dataset.train_dataset
     args.generator_model = 'TINYIMNET_GEN'
-elif args.dataset == SuperImageNet:
+elif args.dataset == constant.SuperImageNet:
     from models.imagenet_resnet import resnet18
     dataset = SuperImageNet(args.path, version=args.version, num_tasks=args.n_tasks, num_clients=args.num_clients, batch_size=args.batch_size)
     args.num_classes = dataset.num_classes
@@ -43,18 +44,18 @@ task_size = dataset.n_classes_per_task
 counter, classes_learned = 0, task_size
 num_participants = int(args.frac * args.num_clients)
 clients, max_accuracy = [], []
-if args.method == MFCL:
+if args.method == constant.MFCL:
     generator = models.__dict__['generator'].__dict__[args.generator_model](zdim=args.z_dim, convdim=args.conv_dim)
 
 for i in range(args.num_clients):
     group = dataset.groups[i]
-    if args.method == FedAVG:
+    if args.method == constant.FedAVG:
         client = AVG(args.batch_size, args.epochs, ds, group, args.dataset)
-    elif args.method == FedProx:
+    elif args.method == constant.FedProx:
         client = PROX(args.batch_size, args.epochs, ds, group, args.dataset)
-    elif args.method == ORACLE:
+    elif args.method == constant.ORACLE:
         client = ORACLE(args.batch_size, args.epochs, ds, group, args.dataset)
-    elif args.method == MFCL:
+    elif args.method == constant.MFCL:
         client = MFCL(args.batch_size, args.epochs, ds, group, args.client_type, args.w_kd, args.w_ft, args.syn_size, args.dataset)
     clients.append(client)
 
@@ -81,7 +82,7 @@ for t in range(args.n_tasks):
         print(f"total_accuracy_{t}: {accuracies}")
         max_accuracy.append(accuracies[-1])
     if t != args.n_tasks - 1:
-        if args.method == MFCL:
+        if args.method == constant.MFCL:
             original_global = deepcopy(global_model)
             teacher = train_gen(deepcopy(global_model), classes_learned, generator, args)
             for client in clients:

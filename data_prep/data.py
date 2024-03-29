@@ -8,13 +8,14 @@ from torchvision import datasets, transforms
 from collections import defaultdict
 
 from data_prep.common import create_lda_partitions
-from constant import *
+# from constant import *
+import constant
 
 
 def get_dataset(args):
-    if args.dataset == CIFAR100:
+    if args.dataset == constant.CIFAR100:
         return get_cifar100(args)
-    elif args.dataset == tinyImageNet:
+    elif args.dataset == constant.tinyImageNet:
         return get_tiny(args)
     else:
         raise NotImplementedError
