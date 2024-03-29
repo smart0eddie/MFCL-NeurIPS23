@@ -33,7 +33,7 @@ class Teacher(nn.Module):
         self.first_time = train
         self.criterion = nn.CrossEntropyLoss()
         self.mse_loss = nn.MSELoss(reduction="none").to(self.device)
-        self.smoothing = Gaussiansmoothing(3, 5, 1, self.device)
+        self.smoothing = Gaussiansmoothing(3, 5, 1, device=self.device)
         if self.bn_loss:
             loss_r_feature_layers = []
             for module in self.solver.modules():
