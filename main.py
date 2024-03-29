@@ -2,6 +2,8 @@ import os
 import numpy as np
 from copy import deepcopy
 
+import torch
+
 import models
 # from constant import *
 import constant
@@ -15,8 +17,13 @@ from utiles import setup_seed, fedavg_aggregation, evaluate_accuracy_forgetting,
 
 
 args = start()
-os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID'
-os.environ['CUDA_VISIBLE_DEVICES'] = args.gpuID
+if torch.cuda.is_available():
+    args.device = "cuda"
+    os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID'
+    os.environ['CUDA_VISIBLE_DEVICES'] = args.gpuID
+else:
+    args.device = "cpu"
+
 setup_seed(args.seed)
 
 if args.dataset == constant.CIFAR100:
@@ -50,13 +57,13 @@ if args.method == constant.MFCL:
 for i in range(args.num_clients):
     group = dataset.groups[i]
     if args.method == constant.FedAVG:
-        client = AVG(args.batch_size, args.epochs, ds, group, args.dataset)
+        client = AVG(args.batch_size, args.epochs, ds, group, args.dataset, args.device)
     elif args.method == constant.FedProx:
-        client = PROX(args.batch_size, args.epochs, ds, group, args.dataset)
+        client = PROX(args.batch_size, args.epochs, ds, group, args.dataset, args.device)
     elif args.method == constant.ORACLE:
-        client = ORACLE(args.batch_size, args.epochs, ds, group, args.dataset)
+        client = ORACLE(args.batch_size, args.epochs, ds, group, args.dataset, args.device)
     elif args.method == constant.MFCL:
-        client = MFCL(args.batch_size, args.epochs, ds, group, args.client_type, args.w_kd, args.w_ft, args.syn_size, args.dataset)
+        client = MFCL(args.batch_size, args.epochs, ds, group, args.client_type, args.w_kd, args.w_ft, args.syn_size, args.dataset, args.device)
     clients.append(client)
 
 for t in range(args.n_tasks):
@@ -72,7 +79,7 @@ for t in range(args.n_tasks):
             weights.append(model.state_dict())
         global_model.load_state_dict(fedavg_aggregation(weights))
         if (round + 1) % args.eval_int == 0:
-            correct, total = evaluate_accuracy(global_model, test_loader, args.method)
+            correct, total = evaluate_accuracy(global_model, test_loader, args.method, args.device)
             print(f'round {counter}, accuracy: {100 * correct / total}')
         counter += 1
     if t == 0:

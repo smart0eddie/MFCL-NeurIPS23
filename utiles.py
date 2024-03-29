@@ -28,12 +28,12 @@ def fedavg_aggregation(weights):
     return w_avg
 
 
-def evaluate_accuracy(model, test_loader, method=None):
-    model.to('cuda')
+def evaluate_accuracy(model, test_loader, method=None, device='cuda'):
+    model.to(device)
     model.eval()
     correct, total = 0, 0
     for i, (x, y) in enumerate(test_loader):
-        x, y = x.to('cuda'), y.to('cuda')
+        x, y = x.to(device), y.to(device)
         with torch.no_grad():
             outputs = model(x)
         predicts = torch.max(outputs, dim=1)[1]
@@ -43,11 +43,11 @@ def evaluate_accuracy(model, test_loader, method=None):
     return correct, total
 
 
-def evaluate_accuracy_forgetting(model, test_loaders, method=None):
+def evaluate_accuracy_forgetting(model, test_loaders, method=None, device='cuda'):
     c, t = 0, 0
     accuracies = []
     for task_id, test_loader in enumerate(test_loaders):
-        ci, ti = evaluate_accuracy(model, test_loader, method)
+        ci, ti = evaluate_accuracy(model, test_loader, method, device)
         accuracies.append(100 * ci / ti)
         c += ci
         t += ti
@@ -56,7 +56,7 @@ def evaluate_accuracy_forgetting(model, test_loaders, method=None):
 
 def train_gen(model, valid_out_dim, generator, args):
     dataset_size = (-1, 3, args.img_size, args.img_size)
-    model.to('cuda')
+    model.to(args.device)
     generator_optimizer = torch.optim.Adam(params=generator.parameters(), lr=args.generator_lr)
     teacher = Teacher(solver=model, generator=generator, gen_opt=generator_optimizer,
                       img_shape=dataset_size, iters=args.pi, deep_inv_params=[1e-3, args.w_bn, args.w_noise, 1e3, 1],
@@ -79,6 +79,7 @@ def start():
     parser.add_argument('--gpuID', type=str, default='0', help="GPU ID")
     parser.add_argument('--seed', type=int, default=1, help='random seed')
     parser.add_argument('--method', type=str, default=constant.MFCL, help="name of method", choices=[constant.ORACLE, constant.FedAVG, constant.FedProx, constant.MFCL])
+    parser.add_argument('--client_type', type=str, default='', help="stub, seems not used")
     parser.add_argument('--dataset', type=str, default=constant.CIFAR100, help="name of dataset")
     parser.add_argument('--num_clients', type=int, default=50, help='#clients')
     parser.add_argument('--epochs', type=int, default=10, help='Local Epoch size')

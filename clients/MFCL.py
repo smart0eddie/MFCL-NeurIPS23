@@ -20,13 +20,13 @@ class MFCL(AVG):
         self.syn_size = syn_size
 
     def train(self, model, lr, teacher, generator_server, glob_iter_):
-        model.to('cuda')
+        model.to(self.device)
         model.train()
         opt = optim.SGD(model.parameters(), lr=lr, weight_decay=0.00001)
         if teacher is None:
             for epoch in range(self.local_epoch):
                 for i, (x, y) in enumerate(self.train_loader):
-                    x, y = x.to('cuda'), y.to('cuda')
+                    x, y = x.to(self.device), y.to(self.device)
                     logits = model(x)
                     loss = self.criterion_fn(logits, y)
                     opt.zero_grad()
@@ -40,7 +40,7 @@ class MFCL(AVG):
         previous_teacher, previous_linear = deepcopy(teacher[0]), deepcopy(teacher[1])
         for epoch in range(self.local_epoch):
             for i, (x, y) in enumerate(self.train_loader):
-                x, y = x.to('cuda'), y.to('cuda')
+                x, y = x.to(self.device), y.to(self.device)
                 idx1 = torch.where(y >= self.last_valid_dim)[0]
                 x_replay, y_replay, y_replay_hat = self.sample(previous_teacher, self.syn_size)
                 y_hat = previous_teacher.generate_scores(x, allowed_predictions=np.arange(self.last_valid_dim))
@@ -48,7 +48,7 @@ class MFCL(AVG):
                 x_com, y_com = combine_data(((x, y), (x_replay, y_replay)))
                 logits_pen = model.feature(x_com)
                 logits = model.fc(logits_pen)
-                mappings = torch.ones(y_com.size(), dtype=torch.float32, device='cuda')
+                mappings = torch.ones(y_com.size(), dtype=torch.float32, device=self.device)
                 dw_cls = mappings[y_com.long()]
                 loss_class = self.criterion(logits[idx1, self.last_valid_dim:self.valid_dim], (y_com[idx1] - self.last_valid_dim), dw_cls[idx1])
                 with torch.no_grad():
@@ -62,7 +62,7 @@ class MFCL(AVG):
 
     def kd(self, x_com, previous_linear, logits_pen, previous_teacher):
         kd_index = np.arange(x_com.size(0))
-        dw_KD = self.dw_k[-1 * torch.ones(len(kd_index),).long()].to('cuda')
+        dw_KD = self.dw_k[-1 * torch.ones(len(kd_index),).long()].to(self.device)
         logits_KD = previous_linear(logits_pen[kd_index])[:, :self.last_valid_dim]
         logits_KD_past = previous_linear(previous_teacher.generate_scores_pen(x_com[kd_index]))[:, :self.last_valid_dim]
         loss_kd = self.mu * (self.kd_criterion(logits_KD, logits_KD_past).sum(dim=1) * dw_KD).mean() / (logits_KD.size(1))

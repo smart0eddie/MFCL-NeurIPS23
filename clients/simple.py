@@ -8,7 +8,7 @@ import constant
 
 
 class AVG:
-    def __init__(self, batch_size, epochs, train_dataset, groups, dataset_name):
+    def __init__(self, batch_size, epochs, train_dataset, groups, dataset_name, device):
         self.criterion_fn = F.cross_entropy
         self.batch_size = batch_size
         self.train_dataset = train_dataset
@@ -16,6 +16,7 @@ class AVG:
         self.current_t = -1
         self.local_epoch = epochs
         self.dataset_name = dataset_name
+        self.device = device
 
     def set_dataloader(self, samples):
         if self.dataset_name in [constant.CIFAR100, constant.tinyImageNet]:
@@ -29,12 +30,12 @@ class AVG:
         self.set_dataloader(samples)
 
     def train(self, model, lr, teacher, generator_server, glob_iter_):
-        model.to('cuda')
+        model.to(self.device)
         model.train()
         opt = optim.SGD(model.parameters(), lr=lr, weight_decay=0.00001)
         for epoch in range(self.local_epoch):
             for i, (x, y) in enumerate(self.train_loader):
-                x, y = x.to('cuda'), y.to('cuda')
+                x, y = x.to(self.device), y.to(self.device)
                 logits = model(x)
                 loss = self.criterion_fn(logits, y)
                 opt.zero_grad()
@@ -44,18 +45,18 @@ class AVG:
 
 
 class PROX(AVG):
-    def __init__(self, batch_size, epochs, train_dataset, groups, dataset_name):
-        super(PROX, self).__init__(batch_size, epochs, train_dataset, groups, dataset_name)
+    def __init__(self, batch_size, epochs, train_dataset, groups, dataset_name, device):
+        super(PROX, self).__init__(batch_size, epochs, train_dataset, groups, dataset_name, device)
         self.mu = 0.01
 
     def train(self, model, lr, teacher, generator_server, glob_iter_):
-        model.to('cuda')
+        model.to(self.device)
         model.train()
         global_model = deepcopy(model)
         opt = optim.SGD(model.parameters(), lr=lr, weight_decay=0.00001)
         for epoch in range(self.local_epoch):
             for i, (x, y) in enumerate(self.train_loader):
-                x, y = x.to('cuda'), y.to('cuda')
+                x, y = x.to(self.device), y.to(self.device)
                 logits = model(x)
                 opt.zero_grad()
                 proximal_term = 0.0
@@ -68,8 +69,8 @@ class PROX(AVG):
 
 
 class ORACLE(AVG):
-    def __init__(self, batch_size, epochs, train_dataset, groups, dataset_name):
-        super(ORACLE, self).__init__(batch_size, epochs, train_dataset, groups, dataset_name)
+    def __init__(self, batch_size, epochs, train_dataset, groups, dataset_name, device):
+        super(ORACLE, self).__init__(batch_size, epochs, train_dataset, groups, dataset_name, device)
 
     def set_next_t(self):
         self.current_t += 1
@@ -79,12 +80,12 @@ class ORACLE(AVG):
         self.set_dataloader(current_group)
 
     def train(self, model, lr, teacher, generator_server, glob_iter_):
-        model.to('cuda')
+        model.to(self.device)
         model.train()
         opt = optim.SGD(model.parameters(), lr=lr, weight_decay=0.00001)
         for epoch in range(self.local_epoch):
             for i, (x, y) in enumerate(self.train_loader):
-                x, y = x.to('cuda'), y.to('cuda')
+                x, y = x.to(self.device), y.to(self.device)
                 logits = model(x)
                 loss = self.criterion_fn(logits, y)
                 opt.zero_grad()

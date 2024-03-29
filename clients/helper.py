@@ -9,6 +9,7 @@ import wandb
 class Teacher(nn.Module):
     def __init__(self, solver, generator, gen_opt, img_shape, iters, class_idx, deep_inv_params, train, args):
         super().__init__()
+        self.device = args.device
         self.solver = solver
         self.generator = generator
         self.gen_opt = gen_opt
@@ -31,8 +32,8 @@ class Teacher(nn.Module):
         self.num_k = len(self.class_idx)
         self.first_time = train
         self.criterion = nn.CrossEntropyLoss()
-        self.mse_loss = nn.MSELoss(reduction="none").to('cuda')
-        self.smoothing = Gaussiansmoothing(3, 5, 1)
+        self.mse_loss = nn.MSELoss(reduction="none").to(self.device)
+        self.smoothing = Gaussiansmoothing(3, 5, 1, self.device)
         if self.bn_loss:
             loss_r_feature_layers = []
             for module in self.solver.modules():
@@ -48,7 +49,7 @@ class Teacher(nn.Module):
             self.get_images(bs=size, epochs=self.iters, idx=-1)
         self.generator.eval()
         with torch.no_grad():
-            x_i = self.generator.sample(size, 'cuda')
+            x_i = self.generator.sample(size, self.device)
         with torch.no_grad():
             y_hat = self.solver.forward(x_i)
         y_hat = y_hat[:, self.class_idx]
@@ -72,10 +73,10 @@ class Teacher(nn.Module):
     def get_images(self, bs=256, epochs=1000, idx=-1):
         torch.cuda.empty_cache()
         self.generator.train()
-        self.generator.to('cuda')
+        self.generator.to(self.device)
         name = f'step{len(self.class_idx)}'
         for epoch in tqdm(range(epochs)):
-            inputs = self.generator.sample(bs, 'cuda')
+            inputs = self.generator.sample(bs, self.device)
             self.gen_opt.zero_grad()
             self.solver.zero_grad()
             bn_loss = 0
@@ -140,7 +141,7 @@ class DeepInversionFeatureHook():
 
 
 class Gaussiansmoothing(nn.Module):
-    def __init__(self, channels, kernel_size, sigma, dim=2):
+    def __init__(self, channels, kernel_size, sigma, dim=2, device='cuda'):
         super(Gaussiansmoothing, self).__init__()
         kernel_size = [kernel_size] * dim
         sigma = [sigma] * dim
@@ -152,7 +153,7 @@ class Gaussiansmoothing(nn.Module):
 
         kernel = kernel / torch.sum(kernel)
         kernel = kernel.view(1, 1, *kernel.size())
-        kernel = kernel.repeat(channels, *[1] * (kernel.dim() - 1)).to('cuda')
+        kernel = kernel.repeat(channels, *[1] * (kernel.dim() - 1)).to(device)
         self.register_buffer('weight', kernel)
         self.groups = channels
         if dim == 1:
