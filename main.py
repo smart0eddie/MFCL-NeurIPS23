@@ -66,6 +66,8 @@ for i in range(args.num_clients):
         client = MFCL(args.batch_size, args.epochs, ds, group, args.client_type, args.w_kd, args.w_ft, args.syn_size, args.dataset, args.device)
     clients.append(client)
 
+correct = 0 
+total = 1
 for t in range(args.n_tasks):
     test_loader = dataset.get_full_test(t)
     [client.set_next_t() for client in clients]
