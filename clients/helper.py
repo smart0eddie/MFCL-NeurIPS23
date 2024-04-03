@@ -108,11 +108,11 @@ class Teacher(nn.Module):
                 loss_var = self.mse_loss(inputs, inputs_smooth).mean()
                 noise_loss = self.di_var_scale * loss_var
                 loss += noise_loss
-            wandb.log({f'{name}/bn': bn_loss,
-                       f'{name}/ie': ie_loss,
-                       f'{name}/ce': ce_loss,
-                       f'{name}/noise': noise_loss,
-                       })
+            # wandb.log({f'{name}/bn': bn_loss,
+            #            f'{name}/ie': ie_loss,
+            #            f'{name}/ce': ce_loss,
+            #            f'{name}/noise': noise_loss,
+            #            })
             loss.backward()
             self.gen_opt.step()
         torch.cuda.empty_cache()

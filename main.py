@@ -16,7 +16,7 @@ from clients.simple import AVG, PROX, ORACLE
 from data_prep.super_imagenet import SuperImageNet
 from utiles import setup_seed, fedavg_aggregation, evaluate_accuracy_forgetting, evaluate_accuracy, train_gen, start
 
-wandb.init()
+# wandb.init()
 
 args = start()
 if torch.cuda.is_available():
