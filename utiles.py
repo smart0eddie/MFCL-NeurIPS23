@@ -85,6 +85,7 @@ def start():
     parser.add_argument('--epochs', type=int, default=10, help='Local Epoch size')
     parser.add_argument('--lr', type=float, default=0.1, help='Local Learning Rate')
     parser.add_argument('--batch_size', type=int, default=32, help='Local Bachsize')
+    parser.add_argument('--n_worker', type=int, default=8, help='Number of Imagework loader worker, set to 0 if any problem happens')    
     parser.add_argument('--eval_int', type=int, default=10, help='Evaluation intervals')
     parser.add_argument('--global_round', type=int, default=100, help='#global rounds per task')
     parser.add_argument('--frac', type=float, default=0.1, help='#selected clients in each round')

@@ -29,9 +29,9 @@ class ImageDataset(Dataset):
         return image, self.data_frame.iloc[idx].get("label", -1)
 
 
-def get_dataloader(batch_size, test_list, trans, shuffle):
+def get_dataloader(batch_size, test_list, trans, shuffle, n_worker=8):
     dataset = ImageDataset(pd.DataFrame(test_list), transform=trans)
-    loader = DataLoader(dataset, shuffle=shuffle, batch_size=batch_size, drop_last=shuffle, num_workers=8, pin_memory=True)
+    loader = DataLoader(dataset, shuffle=shuffle, batch_size=batch_size, drop_last=shuffle, num_workers=n_worker, pin_memory=True)
     return loader
 
 
@@ -45,7 +45,7 @@ class SuperImageNet():
     num_samples_per_version_dict = {'train': {'S': 2500, 'M': 5000, 'L': 7500}, 'val': {'S': 100, 'M': 200, 'L': 300}}
     num_classes_per_version_dict = {'S': 100, 'M': 75, 'L': 50}
 
-    def __init__(self, root, version='M', num_tasks=1, num_clients=1, batch_size=16):
+    def __init__(self, root, version='M', num_tasks=1, num_clients=1, batch_size=16, n_worker=8):
         """
         Implementation of SuperImageNet-S/M/L dataset. Can be customized to split classes into disjoint sets for continual learning tasks.
         For class-incremental setup, specify total number of tasks, and the current task to generate data for.
@@ -63,6 +63,7 @@ class SuperImageNet():
         self.version = version
         self.num_tasks = num_tasks
         self.num_clients = num_clients
+        self.n_worker = n_worker
         dset_mean = (0.485, 0.456, 0.406)
         dset_std = (0.229, 0.224, 0.225)
         self.img_size = 224
@@ -171,4 +172,4 @@ class SuperImageNet():
     def get_dl(self, samples, train=True):
         trans = self.transform if train else self.test_transform
         bs = self.batch_size if train else 128
-        return get_dataloader(bs, samples, trans, shuffle=train)
+        return get_dataloader(bs, samples, trans, shuffle=train, n_worker=self.n_worker)

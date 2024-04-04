@@ -40,7 +40,7 @@ def main():
         args.generator_model = 'TINYIMNET_GEN'
     elif args.dataset == constant.SuperImageNet:
         from models.imagenet_resnet import resnet18
-        dataset = SuperImageNet(args.path, version=args.version, num_tasks=args.n_tasks, num_clients=args.num_clients, batch_size=args.batch_size)
+        dataset = SuperImageNet(args.path, version=args.version, num_tasks=args.n_tasks, num_clients=args.num_clients, batch_size=args.batch_size, n_worker=args.n_worker)
         args.num_classes = dataset.num_classes
         feature_extractor = resnet18(args.num_classes)
         args.generator_model = 'IMNET_GEN'
