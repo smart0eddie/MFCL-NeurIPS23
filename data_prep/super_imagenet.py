@@ -41,7 +41,7 @@ class SuperImageNet():
     train_folder_name = 'train'
     val_folder_name = 'val'
     meta_folder = os.path.dirname(Path(__file__).absolute())
-    valid_image_extensions = ['.jpg', '.JPG', '.jpeg', '.JPEG']
+    valid_image_extensions = ['.jpg', '.JPG', '.jpeg', '.JPEG', '.png', '.PNG']
     num_samples_per_version_dict = {'train': {'S': 2500, 'M': 5000, 'L': 7500}, 'val': {'S': 100, 'M': 200, 'L': 300}}
     num_classes_per_version_dict = {'S': 100, 'M': 75, 'L': 50}
 
