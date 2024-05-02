@@ -1,0 +1,120 @@
+task 0, classes: [5, 7, 25, 71, 83]
+task 1, classes: [9, 15, 29, 72, 76]
+task 2, classes: [43, 54, 87, 90, 91]
+task 3, classes: [2, 11, 42, 55, 66]
+task 4, classes: [19, 32, 36, 47, 51]
+task 5, classes: [46, 68, 70, 79, 80]
+task 6, classes: [16, 21, 50, 57, 92]
+task 7, classes: [3, 6, 44, 48, 53]
+task 8, classes: [0, 52, 58, 77, 88]
+task 9, classes: [4, 24, 35, 78, 82]
+round 9, accuracy: 47.86666488647461
+round 19, accuracy: 53.400001525878906
+round 29, accuracy: 56.266666412353516
+round 39, accuracy: 58.733333587646484
+round 49, accuracy: 61.46666717529297
+round 59, accuracy: 61.53333282470703
+round 69, accuracy: 64.46666717529297
+round 79, accuracy: 64.93333435058594
+round 89, accuracy: 66.46666717529297
+round 99, accuracy: 66.73332977294922
+round 109, accuracy: 32.599998474121094
+round 119, accuracy: 42.599998474121094
+round 129, accuracy: 47.733333587646484
+round 139, accuracy: 51.266666412353516
+round 149, accuracy: 53.16666793823242
+round 159, accuracy: 55.46666717529297
+round 169, accuracy: 56.33333206176758
+round 179, accuracy: 57.266666412353516
+round 189, accuracy: 56.66666793823242
+round 199, accuracy: 58.63333511352539
+total_accuracy_1: [tensor(63.3333), tensor(53.9333)]
+round 209, accuracy: 41.86666488647461
+round 219, accuracy: 45.66666793823242
+round 229, accuracy: 47.42222213745117
+round 239, accuracy: 49.511112213134766
+round 249, accuracy: 51.06666564941406
+round 259, accuracy: 52.911109924316406
+round 269, accuracy: 53.13333511352539
+round 279, accuracy: 55.53333282470703
+round 289, accuracy: 55.64444351196289
+round 299, accuracy: 56.20000076293945
+total_accuracy_2: [tensor(67.3333), tensor(53.2000), tensor(48.0667)]
+round 309, accuracy: 42.16666793823242
+round 319, accuracy: 44.483333587646484
+round 329, accuracy: 46.79999923706055
+round 339, accuracy: 48.20000076293945
+round 349, accuracy: 49.41666793823242
+round 359, accuracy: 50.53333282470703
+round 369, accuracy: 51.58333206176758
+round 379, accuracy: 52.38333511352539
+round 389, accuracy: 52.81666564941406
+round 399, accuracy: 53.41666793823242
+total_accuracy_3: [tensor(64.0667), tensor(60.2000), tensor(49.), tensor(40.4000)]
+round 409, accuracy: 45.720001220703125
+round 419, accuracy: 48.400001525878906
+round 429, accuracy: 50.49333190917969
+round 439, accuracy: 52.15999984741211
+round 449, accuracy: 53.46666717529297
+round 459, accuracy: 54.30666732788086
+round 469, accuracy: 54.9466667175293
+round 479, accuracy: 55.78666687011719
+round 489, accuracy: 56.38666534423828
+round 499, accuracy: 56.720001220703125
+total_accuracy_4: [tensor(62.6667), tensor(60.2000), tensor(52.8000), tensor(47.4000), tensor(60.5333)]
+round 509, accuracy: 45.42222213745117
+round 519, accuracy: 48.13333511352539
+round 529, accuracy: 49.27777862548828
+round 539, accuracy: 51.66666793823242
+round 549, accuracy: 52.588890075683594
+round 559, accuracy: 53.75555419921875
+round 569, accuracy: 54.266666412353516
+round 579, accuracy: 55.29999923706055
+round 589, accuracy: 55.400001525878906
+round 599, accuracy: 55.88888931274414
+total_accuracy_5: [tensor(63.9333), tensor(62.9333), tensor(55.3333), tensor(49.6667), tensor(64.4000), tensor(39.0667)]
+round 609, accuracy: 48.33333206176758
+round 619, accuracy: 50.74285888671875
+round 629, accuracy: 51.63809585571289
+round 639, accuracy: 53.21904754638672
+round 649, accuracy: 54.409523010253906
+round 659, accuracy: 55.4571418762207
+round 669, accuracy: 56.10476303100586
+round 679, accuracy: 56.78095245361328
+round 689, accuracy: 57.36190414428711
+round 699, accuracy: 57.86666488647461
+total_accuracy_6: [tensor(65.3333), tensor(65.6667), tensor(57.6667), tensor(53.8667), tensor(66.6000), tensor(46.6000), tensor(49.3333)]
+round 709, accuracy: 48.75833511352539
+round 719, accuracy: 50.95000076293945
+round 729, accuracy: 52.775001525878906
+round 739, accuracy: 53.84166717529297
+round 749, accuracy: 55.18333435058594
+round 759, accuracy: 55.54166793823242
+round 769, accuracy: 56.58333206176758
+round 779, accuracy: 56.91666793823242
+round 789, accuracy: 57.69166564941406
+round 799, accuracy: 58.07500076293945
+total_accuracy_7: [tensor(67.7333), tensor(65.8667), tensor(56.9333), tensor(54.2667), tensor(71.), tensor(47.6667), tensor(55.7333), tensor(45.4000)]
+round 809, accuracy: 50.63703536987305
+round 819, accuracy: 52.7185173034668
+round 829, accuracy: 53.911109924316406
+round 839, accuracy: 55.54814910888672
+round 849, accuracy: 56.74074172973633
+round 859, accuracy: 57.34074020385742
+round 869, accuracy: 58.088890075683594
+round 879, accuracy: 58.237037658691406
+round 889, accuracy: 58.77037048339844
+round 899, accuracy: 59.170372009277344
+total_accuracy_8: [tensor(67.8000), tensor(66.7333), tensor(59.2667), tensor(59.2667), tensor(72.5333), tensor(51.5333), tensor(57.3333), tensor(51.6000), tensor(46.4667)]
+round 909, accuracy: 51.779998779296875
+round 919, accuracy: 53.93333435058594
+round 929, accuracy: 55.37333297729492
+round 939, accuracy: 56.526668548583984
+round 949, accuracy: 57.11333465576172
+round 959, accuracy: 58.1533317565918
+round 969, accuracy: 58.72666549682617
+round 979, accuracy: 59.47999954223633
+round 989, accuracy: 59.52000045776367
+round 999, accuracy: 59.86000061035156
+total_accuracy_9: [tensor(70.6667), tensor(68.2000), tensor(60.9333), tensor(59.5333), tensor(74.2667), tensor(50.), tensor(59.8667), tensor(53.4000), tensor(54.4000), tensor(47.3333)]
+forgetting: tensor(-16.7399)
